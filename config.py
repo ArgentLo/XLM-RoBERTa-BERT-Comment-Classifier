@@ -7,7 +7,7 @@ WARM_UP  = 0.05   # Warm up LR
 NON_TOXIX_NUM   = 100000
 LR = 2e-5
 
-TEST_MODE = False
+TEST_MODE = True
 TRAIN_WITH_ALEX = True
 TRAIN_VAL_COMBINE = True
 TRAIN_WITH_2018 = False

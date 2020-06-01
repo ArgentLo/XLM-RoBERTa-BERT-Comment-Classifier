@@ -133,11 +133,12 @@ def run():
 
     best_roc_auc = 0
     best_epoch   = 1
+    if config.TRAIN_WITH_ALEX:
+        train_data_loader, valid_data_loader = get_data_loader(train_set_alex, None, df_valid, 1, config.TRAIN_WITH_ALEX)
+
     for epoch in range(1, config.EPOCHS+1):
 
-        if config.TRAIN_WITH_ALEX:
-            train_data_loader, valid_data_loader = get_data_loader(train_set_alex, None, df_valid, epoch, config.TRAIN_WITH_ALEX)
-        else:
+        if not config.TRAIN_WITH_ALEX:
             # resample toxic==0 for each epoch
             train_data_loader, valid_data_loader = get_data_loader(train_set1, train_set2, df_valid, epoch, config.TRAIN_WITH_ALEX)
 
