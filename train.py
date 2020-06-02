@@ -160,19 +160,22 @@ def run():
                 param_group['warmup'] = 0
 
 
+        # train + save
         engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
-        outputs, targets = engine.eval_fn(valid_data_loader, model, device)
-        # threshold the Traget value (0.3 -> 0 ; 0.9 -> 1)
-        targets = np.array(targets) >= config.TOXIC_THRESHOLD
-        # roc_auc evaluation metric
-        roc_auc = metrics.roc_auc_score(targets, outputs)
-        
-        print(f"Epoch: {epoch} ROC_AUC Score = {roc_auc}")
         torch.save(model.state_dict(), f"{config.SAVE_NAME}_{epoch}.bin")
-        if roc_auc > best_roc_auc:
-            best_roc_auc = roc_auc
-            best_epoch = epoch
-        print(f"Best ROC_AUC Score = {best_roc_auc} in Epoch {best_epoch}")
+
+        # # eval
+        # outputs, targets = engine.eval_fn(valid_data_loader, model, device)
+        # # threshold the Traget value (0.3 -> 0 ; 0.9 -> 1)
+        # targets = np.array(targets) >= config.TOXIC_THRESHOLD
+        # # roc_auc evaluation metric
+        # roc_auc = metrics.roc_auc_score(targets, outputs)
+        
+        # print(f"Epoch: {epoch} ROC_AUC Score = {roc_auc}")
+        # if roc_auc > best_roc_auc:
+        #     best_roc_auc = roc_auc
+        #     best_epoch = epoch
+        # print(f"Best ROC_AUC Score = {best_roc_auc} in Epoch {best_epoch}")
 
 if __name__ == "__main__":
     run()

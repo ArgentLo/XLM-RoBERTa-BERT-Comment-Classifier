@@ -3,18 +3,18 @@ import transformers
 
 ################    Train Config    ################
 TOXIC_THRESHOLD = 0.95  # used for thresholding {val_in_train, val_traget} in training.
-WARM_UP  = 0.05   # Warm up LR 
+WARM_UP  = 0.00   # Warm up LR 
 NON_TOXIX_NUM   = 100000
-LR = 2e-5
+LR = 1e-5
 
 TEST_MODE = False
-TRAIN_WITH_ALEX = True
 TRAIN_VAL_COMBINE = True
-TRAIN_WITH_2018 = False
+TRAIN_WITH_2018 = True
+TRAIN_WITH_ALEX = False
 FOCAL_LOSS = False
 
 # Save Path
-SAVE_NAME = "./checkpoints/trainset_alex"
+SAVE_NAME = "./checkpoints/trainset_2018"
 
 MAX_LEN = 192
 TRAIN_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
