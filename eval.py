@@ -103,7 +103,7 @@ def run(model_path):
 
 if __name__ == "__main__":
 
-    trained_model = "gpu10_test_3.bin"
+    trained_model = "trainset_alex_1.bin"
     model_path = "./checkpoints/" + trained_model
 
     fin_outputs_en, fin_outputs_en2 = run(model_path)
