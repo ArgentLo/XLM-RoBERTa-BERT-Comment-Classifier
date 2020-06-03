@@ -35,10 +35,10 @@ class BERTBaseUncased(nn.Module):
         return output
         
 
-class XLMRobertaLarge(nn.Module):
+class XLMRobertaBase(nn.Module):
 
     def __init__(self):
-        super(XLMRobertaLarge, self).__init__()
+        super(XLMRobertaBase, self).__init__()
         self.backbone = XLMRobertaModel.from_pretrained(config.ROBERTA_PATH)
         self.dropout = nn.Dropout(0.3)
         self.linear = nn.Linear(

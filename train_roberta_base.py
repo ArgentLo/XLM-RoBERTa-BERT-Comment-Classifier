@@ -6,7 +6,7 @@ from sklearn import model_selection, metrics
 from transformers import AdamW, get_linear_schedule_with_warmup
 
 # from model import BERTBaseUncased, XLMRobertaLarge
-import config, engine_roberta_lg, dataset
+import config, engine_roberta_base, dataset
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -114,14 +114,16 @@ def run():
     for i in range(gpu_cnt):
         print(torch.cuda.get_device_name(i))
 
-    device = torch.device("cuda")
 
-    model = config.model()
+    device = torch.device("cuda")
+    model  = config.model()
     model.to(device)
 
     # For multiple GPUs
     if config.PARALLEL:
         model = nn.DataParallel(model)
+        
+
 
     param_optimizer = list(model.named_parameters())
     no_decay = ["bias", "LayerNorm.bias", "LayerNorm.weight"]
@@ -162,11 +164,11 @@ def run():
 
 
         # train + save
-        engine_roberta_lg.train_fn(train_data_loader, model, optimizer, device, scheduler)
+        engine_roberta_base.train_fn(train_data_loader, model, optimizer, device, scheduler)
         torch.save(model.state_dict(), f"{config.SAVE_NAME}_{epoch}.bin")
 
         # # eval
-        # outputs, targets = engine_roberta_lg.eval_fn(valid_data_loader, model, device)
+        # outputs, targets = engine_roberta_base.eval_fn(valid_data_loader, model, device)
         # # threshold the Traget value (0.3 -> 0 ; 0.9 -> 1)
         # targets = np.array(targets) >= config.TOXIC_THRESHOLD
         # # roc_auc evaluation metric

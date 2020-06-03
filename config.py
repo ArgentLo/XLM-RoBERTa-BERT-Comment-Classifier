@@ -1,5 +1,5 @@
 import transformers
-from model import BERTBaseUncased, XLMRobertaLarge
+from model import BERTBaseUncased, XLMRobertaBase
 
 ################    Train Config    ################
 TOXIC_THRESHOLD = 0.95  # used for thresholding {val_in_train, val_traget} in training.
@@ -14,7 +14,7 @@ TRAIN_WITH_ALEX = False
 FOCAL_LOSS = False
 
 # Save Path
-SAVE_NAME = "./checkpoints/reborta_large"
+SAVE_NAME = "./checkpoints/reborta_base"
 
 MAX_LEN = 192
 TRAIN_BATCH_SIZE = 4  # if on TPU: 128 (16*8cores)
@@ -61,10 +61,10 @@ TRAIN_FR_PAVEL = "../data/external_data/18_train_fr_pavel.csv"
 #     return BERTBaseUncased()
 
 
-ROBERTA_PATH = "../pretrained_models/xlm-roberta-large/"
+ROBERTA_PATH = "../pretrained_models/xlm-roberta-base/"
 TOKENIZER = transformers.XLMRobertaTokenizer.from_pretrained(ROBERTA_PATH)
 def model():
-    return XLMRobertaLarge()
+    return XLMRobertaBase()
 
 
 # XLA device
