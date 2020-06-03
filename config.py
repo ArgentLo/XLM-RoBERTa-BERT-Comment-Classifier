@@ -1,29 +1,32 @@
 import transformers
 
 ################    Train Config    ################
-TOXIC_THRESHOLD = 0.95  # used for thresholding {val_in_train, val_traget} in training.
 WARM_UP  = 0.00   # Warm up LR 
-NON_TOXIX_NUM   = 100000
+NON_TOXIX_NUM = 100000
 LR = 1e-5
 
-TEST_MODE = True
+TEST_MODE = False
 TRAIN_VAL_COMBINE = True
-TRAIN_WITH_2018 = False
-TRAIN_WITH_ALEX = False
-FOCAL_LOSS = False
+TRAIN_WITH_2018   = False
+TRAIN_FLOAT_SET2  = True
+TOXIC_THRESHOLD   = 0.40  # threshold FP targets. (0.95 if TRAIN_FLOAT_SET2=False)
+
+TRAIN_WITH_ALEX   = False
+FOCAL_LOSS        = False
 
 # Save Path
-SAVE_NAME = "./checkpoints/reborta_base"
+SAVE_NAME = "./checkpoints/bert_fp_set2"
 
 MAX_LEN = 192
-TRAIN_BATCH_SIZE = 4  # if on TPU: 128 (16*8cores)
-VALID_BATCH_SIZE = 4  # if on TPU: 128 (16*8cores)
-TEST_BATCH_SIZE  = 16
+TRAIN_BATCH_SIZE = 160  # GPU10: 400
+VALID_BATCH_SIZE = 160  
+TEST_BATCH_SIZE  = 2000
 EPOCHS = 6
 
-# TRAIN_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
-# VALID_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
-# TEST_BATCH_SIZE  = 3200
+
+# TRAIN_BATCH_SIZE = 4  # Roberta-base
+# VALID_BATCH_SIZE = 4  # 
+# TEST_BATCH_SIZE  = 16
 
 TRAIN_WORKERS = 64
 VALID_WORKERS = 64
@@ -60,7 +63,6 @@ TOKENIZER = transformers.BertTokenizer.from_pretrained(BERT_PATH, do_lower_case=
 
 # ROBERTA_PATH = "../pretrained_models/xlm-roberta-base/"
 # TOKENIZER = transformers.XLMRobertaTokenizer.from_pretrained(ROBERTA_PATH)
-
 
 
 # XLA device

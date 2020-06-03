@@ -18,7 +18,7 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
     if train_with_alex:
         df_train = train_set1
     else:
-        df_train = sample_train_set2(train_set1, train_set2)  # sample subset of toxic==0
+        df_train = sample_train_set2(train_set1, train_set2, config.TOXIC_THRESHOLD)  # sample subset of toxic==0
 
     # Train with { train + valid } datasets
     if config.TRAIN_VAL_COMBINE:
@@ -77,10 +77,10 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
     return train_data_loader, valid_data_loader
 
 
-def sample_train_set2(train_set1, train_set2):
+def sample_train_set2(train_set1, train_set2, threshold):
     df_train   = pd.concat([
             train_set1, 
-            train_set2.query('toxic==1'),
+            train_set2.query(f'toxic>={threshold}'),
             train_set2.query('toxic==0').sample(n=config.NON_TOXIX_NUM)  # no random state: sample new subset for each epoch
         ], axis=0).reset_index(drop=True)
 
@@ -106,7 +106,15 @@ def run():
             ], axis=0).reset_index(drop=True)
 
         train_set2 = pd.read_csv(config.TRAIN_DATA2, usecols=["comment_text", "toxic"]).fillna("none")
-        train_set2["toxic"] = (train_set2.toxic >= config.TOXIC_THRESHOLD).astype(int)  # toxic threshold 
+
+        # don't round up -> if train2 as float
+        if config.TRAIN_FLOAT_SET2:
+            train_set2["toxic"] = train_set2["toxic"][train_set2.toxic >= config.TOXIC_THRESHOLD] 
+            train_set2 = train_set2.fillna(0)
+
+        else:
+            train_set2["toxic"] = (train_set2.toxic >= config.TOXIC_THRESHOLD).astype(int)  # toxic threshold 
+
     df_valid = pd.read_csv(config.VALID_DATA, usecols=["comment_text", "toxic"])
 
     gpu_cnt = torch.cuda.device_count()
