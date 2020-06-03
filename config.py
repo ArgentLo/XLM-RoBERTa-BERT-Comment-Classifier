@@ -3,9 +3,9 @@ from model import BERTBaseUncased, XLMRobertaLarge
 
 ################    Train Config    ################
 TOXIC_THRESHOLD = 0.95  # used for thresholding {val_in_train, val_traget} in training.
-WARM_UP  = 0.05   # Warm up LR 
+WARM_UP  = 0.00   # Warm up LR 
 NON_TOXIX_NUM   = 100000
-LR = 1.5e-5
+LR = 1e-5
 
 TEST_MODE = True
 TRAIN_VAL_COMBINE = True
@@ -17,9 +17,9 @@ FOCAL_LOSS = False
 SAVE_NAME = "./checkpoints/reborta_large"
 
 MAX_LEN = 192
-TRAIN_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
-VALID_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
-TEST_BATCH_SIZE  = 3200
+TRAIN_BATCH_SIZE = 4  # if on TPU: 128 (16*8cores)
+VALID_BATCH_SIZE = 4  # if on TPU: 128 (16*8cores)
+TEST_BATCH_SIZE  = 16
 EPOCHS = 6
 
 # TRAIN_BATCH_SIZE = 400  # if on TPU: 128 (16*8cores)
