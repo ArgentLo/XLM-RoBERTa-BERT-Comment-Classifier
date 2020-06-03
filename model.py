@@ -1,5 +1,4 @@
 import transformers
-from transformers import XLMRobertaModel, XLMRobertaTokenizer
 import torch.nn as nn
 import torch
 
@@ -39,7 +38,7 @@ class XLMRobertaBase(nn.Module):
 
     def __init__(self):
         super(XLMRobertaBase, self).__init__()
-        self.backbone = XLMRobertaModel.from_pretrained(config.ROBERTA_PATH)
+        self.backbone = transformers.XLMRobertaModel.from_pretrained(config.ROBERTA_PATH)
         self.dropout = nn.Dropout(0.3)
         self.linear = nn.Linear(
             in_features=self.backbone.pooler.dense.out_features * 2,

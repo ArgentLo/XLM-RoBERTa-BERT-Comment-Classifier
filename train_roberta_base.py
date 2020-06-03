@@ -5,7 +5,7 @@ import numpy as np
 from sklearn import model_selection, metrics
 from transformers import AdamW, get_linear_schedule_with_warmup
 
-# from model import BERTBaseUncased, XLMRobertaLarge
+from model import XLMRobertaLarge
 import config, engine_roberta_base, dataset
 
 import warnings
@@ -116,7 +116,7 @@ def run():
 
 
     device = torch.device("cuda")
-    model  = config.model()
+    model  = XLMRobertaLarge()
     model.to(device)
 
     # For multiple GPUs

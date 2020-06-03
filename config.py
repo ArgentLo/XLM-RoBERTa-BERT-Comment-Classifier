@@ -1,5 +1,4 @@
 import transformers
-from model import BERTBaseUncased, XLMRobertaBase
 
 ################    Train Config    ################
 TOXIC_THRESHOLD = 0.95  # used for thresholding {val_in_train, val_traget} in training.
@@ -55,16 +54,13 @@ TRAIN_FR_PAVEL = "../data/external_data/18_train_fr_pavel.csv"
 
 ################    BASE MODEL    ################
 
-# BERT_PATH = "../pretrained_models/bert-base-multilingual-uncased/"
-# TOKENIZER = transformers.BertTokenizer.from_pretrained(BERT_PATH, do_lower_case=True)
-# def model():
-#     return BERTBaseUncased()
+BERT_PATH = "../pretrained_models/bert-base-multilingual-uncased/"
+TOKENIZER = transformers.BertTokenizer.from_pretrained(BERT_PATH, do_lower_case=True)
 
 
-ROBERTA_PATH = "../pretrained_models/xlm-roberta-base/"
-TOKENIZER = transformers.XLMRobertaTokenizer.from_pretrained(ROBERTA_PATH)
-def model():
-    return XLMRobertaBase()
+# ROBERTA_PATH = "../pretrained_models/xlm-roberta-base/"
+# TOKENIZER = transformers.XLMRobertaTokenizer.from_pretrained(ROBERTA_PATH)
+
 
 
 # XLA device

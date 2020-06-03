@@ -115,7 +115,7 @@ def run():
         print(torch.cuda.get_device_name(i))
 
     device = torch.device("cuda")
-    model  = config.model()
+    model  = BERTBaseUncased()
     model.to(device)
 
     # For multiple GPUs

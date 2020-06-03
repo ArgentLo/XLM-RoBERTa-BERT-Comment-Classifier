@@ -7,6 +7,7 @@ settings.json
 
 # training models
 checkpoints/
+node_submissions/
 
 # C extensions
 *.so
