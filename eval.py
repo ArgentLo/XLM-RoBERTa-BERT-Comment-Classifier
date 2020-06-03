@@ -103,7 +103,7 @@ def run(model_path):
 
 if __name__ == "__main__":
 
-    trained_model = "large_lr_1.bin"
+    trained_model = "trainset_2018_3.bin"
     model_path = "./checkpoints/" + trained_model
 
     fin_outputs_en, fin_outputs_en2 = run(model_path)
