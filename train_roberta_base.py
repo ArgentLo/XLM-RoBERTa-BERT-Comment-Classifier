@@ -170,6 +170,8 @@ def run():
                 param_group['lr'] = 1e-5
                 param_group['warmup'] = 0
 
+        # clear gradients (accumulated backprop in each batch -> train_fn)
+        optimizer.zero_grad()
 
         # train + save
         engine_roberta_base.train_fn(train_data_loader, model, optimizer, device, scheduler)
