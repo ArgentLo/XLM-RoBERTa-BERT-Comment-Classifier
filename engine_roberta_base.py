@@ -43,6 +43,7 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
             loss = loss_fn(outputs, targets, focal_loss=config.FOCAL_LOSS)
             loss.backward()
             optimizer.step()
+
             
         scheduler.step()
 
