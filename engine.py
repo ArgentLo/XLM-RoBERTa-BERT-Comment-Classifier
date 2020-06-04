@@ -15,7 +15,7 @@ def loss_fn(outputs, targets, focal_loss=False):
 def train_fn(data_loader, model, optimizer, device, scheduler):
     model.train()
 
-    for bi, d in tqdm(enumerate(data_loader), total=len(data_loader)):
+    for batch_idx, d in tqdm(enumerate(data_loader), total=len(data_loader)):
         ids = d["ids"]
         token_type_ids = d["token_type_ids"]
         mask = d["mask"]
@@ -26,7 +26,6 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         mask = mask.to(device, dtype=torch.long)
         targets = targets.to(device, dtype=torch.float)
 
-        optimizer.zero_grad()
         outputs = model(
             ids=ids,
             mask=mask,
@@ -34,8 +33,13 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
         )
 
         loss = loss_fn(outputs, targets, focal_loss=config.FOCAL_LOSS)
-        loss.backward()
-        optimizer.step()
+        loss = loss / config.ACCUMULATION_STEP  # Normalize loss (if averaged)
+        loss.backward()                         # compute and sum gradients on params
+
+        if (batch_idx + 1) % config.ACCUMULATION_STEP == 0:
+            optimizer.step()                    # backprop according to accumulated losses
+            optimizer.zero_grad()               # clear gradients
+
         scheduler.step()
 
 
@@ -44,7 +48,7 @@ def eval_fn(data_loader, model, device):
     fin_targets = []
     fin_outputs = []
     with torch.no_grad():
-        for bi, d in tqdm(enumerate(data_loader), total=len(data_loader)):
+        for batch_idx, d in tqdm(enumerate(data_loader), total=len(data_loader)):
             ids = d["ids"]
             token_type_ids = d["token_type_ids"]
             mask = d["mask"]
