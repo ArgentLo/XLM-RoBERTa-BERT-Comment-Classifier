@@ -103,17 +103,19 @@ def run(model_path):
 
 if __name__ == "__main__":
 
-    trained_model = "AccumStep_NoNormLoss_4.bin"
-    model_path = "./checkpoints/" + trained_model
+    for i in range(2, 6):
+        trained_model = f"LossWeight_600k_{i}.bin"
+        print(">>> evaluating Model: ", trained_model)
+        model_path = "./checkpoints/" + trained_model
 
-    fin_outputs_en, fin_outputs_en2 = run(model_path)
-    fin_outputs_en = [item for sublist in fin_outputs_en for item in sublist]
-    fin_outputs_en2 = [item for sublist in fin_outputs_en2 for item in sublist]
+        fin_outputs_en, fin_outputs_en2 = run(model_path)
+        fin_outputs_en = [item for sublist in fin_outputs_en for item in sublist]
+        fin_outputs_en2 = [item for sublist in fin_outputs_en2 for item in sublist]
 
-    sample = pd.read_csv("../data/sample_submission.csv")
-    sample.loc[:, "toxic"] = (np.array(fin_outputs_en) + np.array(fin_outputs_en2)) / 2.0
+        sample = pd.read_csv("../data/sample_submission.csv")
+        sample.loc[:, "toxic"] = (np.array(fin_outputs_en) + np.array(fin_outputs_en2)) / 2.0
 
-    # # sacle the predictions
-    # sample = scale_min_max_submission(sample)
+        # # sacle the predictions
+        # sample = scale_min_max_submission(sample)
 
-    sample.to_csv(f"./checkpoints/{trained_model[:-4]}.csv", index=False)
+        sample.to_csv(f"./checkpoints/{trained_model[:-4]}.csv", index=False)
