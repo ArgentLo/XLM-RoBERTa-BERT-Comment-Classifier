@@ -103,7 +103,7 @@ def run(model_path):
 
 if __name__ == "__main__":
 
-    trained_model = "CleanData_AccumStep_1.bin"
+    trained_model = "AccumStep_NoNormLoss_4.bin"
     model_path = "./checkpoints/" + trained_model
 
     fin_outputs_en, fin_outputs_en2 = run(model_path)
