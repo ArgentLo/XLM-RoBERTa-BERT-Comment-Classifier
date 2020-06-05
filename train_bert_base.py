@@ -49,12 +49,22 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
         num0 = df_valid.toxic[df_valid.toxic == 0].count()
         num1 = df_valid.toxic[df_valid.toxic == 1].count()
         print(f">>> (valid set) toxic label%: {100*(num1 / (num0 + num1)) :.2f}%")
+        # loss weight
+        if config.LOSS_WEIGHT:
+            loss_w = train_toxic_ratio / (num1 / (num0 + num1))
+            df_train.loc[:, "weight"] = df_train.loc[:, "toxic"]
+            df_train.loc[:, "weight"].replace(0, loss_w, inplace=True)  # replace non-toxic label
+            print(f">>>  Loss Weight for non-toxic lable: {loss_w :.2f}.")
+        else: 
+            df_train.loc[:, "weight"] = 1
         print(f">>> Total training examples: {len(df_train)} - Toxic Threshold: {config.TOXIC_THRESHOLD}")
 
     # default training on GPU
     train_dataset = dataset.BERTDatasetTrain(
         comment_text=df_train.comment_text.values,
-        target=df_train.toxic.values
+        target=np.concatenate(
+            (df_train.toxic.values[:, None], 
+            df_train.weight.values[:, None]), axis=1)
     )
 
     train_data_loader = torch.utils.data.DataLoader(

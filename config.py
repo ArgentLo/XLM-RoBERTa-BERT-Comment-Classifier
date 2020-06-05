@@ -10,6 +10,7 @@ TRAIN_VAL_COMBINE = True
 TRAIN_WITH_2018   = False
 TRAIN_FLOAT_SET2  = False
 TOXIC_THRESHOLD   = 0.95  # threshold FP targets. (0.95 if TRAIN_FLOAT_SET2=False ; 0.40 if True)
+LOSS_WEIGHT       = True
 
 TRAIN_WITH_ALEX   = False
 FOCAL_LOSS        = False

@@ -9,7 +9,7 @@ def loss_fn(outputs, targets, focal_loss=False):
     if focal_loss:
         return FocalLoss()(outputs, targets.view(-1, 1))
     else:
-        return nn.BCEWithLogitsLoss()(outputs, targets.view(-1, 1))
+        return nn.BCEWithLogitsLoss(weight=targets[:, 1:2])(outputs, targets[:, 0:1])
 
 
 def train_fn(data_loader, model, optimizer, device, scheduler):
