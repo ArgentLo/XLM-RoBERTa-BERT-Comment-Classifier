@@ -45,6 +45,7 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
     if epoch == 1: 
         num0 = df_train.toxic[df_train.toxic == 0].count()
         num1 = df_train.toxic[df_train.toxic == 1].count()
+        train_toxic_ratio = (num1 / (num0 + num1))
         print(f">>> (train set) toxic label%: {100*(num1 / (num0 + num1)) :.2f}%")
         num0 = df_valid.toxic[df_valid.toxic == 0].count()
         num1 = df_valid.toxic[df_valid.toxic == 1].count()
