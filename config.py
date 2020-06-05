@@ -5,9 +5,9 @@ WARM_UP  = 0.00   # Warm up LR
 NON_TOXIX_NUM = 600000
 LR = 1e-5
 
-TEST_MODE = True
-TRAIN_VAL_COMBINE = False
-TRAIN_WITH_2018   = False
+TEST_MODE = False
+TRAIN_VAL_COMBINE = True
+TRAIN_WITH_2018   = True
 TRAIN_FLOAT_SET2  = False
 TOXIC_THRESHOLD   = 0.95  # threshold FP targets. (0.95 if TRAIN_FLOAT_SET2=False ; 0.40 if True)
 LOSS_WEIGHT       = True
