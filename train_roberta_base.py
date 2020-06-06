@@ -140,12 +140,13 @@ def run():
         train_set1 = pd.read_csv(config.TRAIN_DATA1, usecols=["comment_text", "toxic"]).fillna("none")
 
         if config.TRAIN_WITH_2018:
-            # train_de_pavel = pd.read_csv(config.TRAIN_DE_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
-            # train_fr_pavel = pd.read_csv(config.TRAIN_FR_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
+            # train_de_pavel = pd.read_csv(config.TRAIN_DE_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")  #
+            # train_fr_pavel = pd.read_csv(config.TRAIN_FR_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")  #
             train_es_pavel = pd.read_csv(config.TRAIN_ES_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
             train_zafar = pd.read_csv(config.TRAIN_ZAFAR, usecols=["comment_text", "toxic"]).fillna("none")
             train_set1 = pd.concat([
                 train_set1, train_es_pavel, train_zafar
+                # train_set1, train_es_pavel, train_zafar, train_de_pavel, train_fr_pavel
             ], axis=0).reset_index(drop=True)
 
         train_set2 = pd.read_csv(config.TRAIN_DATA2, usecols=["comment_text", "toxic"]).fillna("none")
@@ -210,11 +211,13 @@ def run():
         # lr = { 2e-5, 1e-5 } for epoch 1, 2
         if epoch == 2:
             for param_group in optimizer.param_groups:
-                param_group['lr'] = 1e-5
+                param_group['lr'] = 0.5 * param_group['lr']
                 param_group['warmup'] = 0
 
         # clear gradients (accumulated backprop in each batch -> train_fn)
         optimizer.zero_grad()
+
+        print(f">>> Current LR: {param_group['lr']}")
 
         # train + save
         engine_roberta_base.train_fn(train_data_loader, model, optimizer, device, scheduler)

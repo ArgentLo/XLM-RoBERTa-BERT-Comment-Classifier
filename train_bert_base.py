@@ -208,11 +208,13 @@ def run():
         # lr = { 2e-5, 1e-5 } for epoch 1, 2
         if epoch == 2 :
             for param_group in optimizer.param_groups:
-                param_group['lr'] = 1e-5
+                param_group['lr'] = 0.5 * param_group['lr']
                 param_group['warmup'] = 0
 
         # clear gradients (accumulated backprop in each batch -> train_fn)
         optimizer.zero_grad()
+
+        print(f">>> Current LR: {param_group['lr']}")
 
         # train + save
         engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
