@@ -7,6 +7,7 @@ from transformers import AdamW, get_linear_schedule_with_warmup
 
 from model import BERTBaseUncased
 import config, engine, dataset
+from batch_sampler import LenMatchBatchSampler, convert_lines
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -61,20 +62,46 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
     else: 
         df_train.loc[:, "weight"] = 1
         
+    ###################################################################
 
-    # default training on GPU
-    train_dataset = dataset.BERTDatasetTrain(
-        comment_text=df_train.comment_text.values,
-        target=np.concatenate(
-            (df_train.toxic.values[:, None], 
-            df_train.weight.values[:, None]), axis=1)
-    )
+    if config.FAST_SAMPLER:
+        df_train['comment_text'] = df_train['comment_text'].astype(str)
+        comment_text = convert_lines(df_train["comment_text"].fillna("none"), config.MAX_LEN, config.TOKENIZER)
+        df_train = df_train.fillna(0)
+        targets=np.concatenate(
+                    (df_train.toxic.values[:, None], 
+                    df_train.weight.values[:, None]), axis=1)
 
-    train_data_loader = torch.utils.data.DataLoader(
-        train_dataset,
-        batch_size=config.TRAIN_BATCH_SIZE,
-        num_workers=config.TRAIN_WORKERS
-    )
+        comment_text = torch.tensor(comment_text, dtype=torch.long)
+
+        targets = torch.tensor(targets, dtype=torch.float)
+
+        train_dataset = torch.utils.data.TensorDataset(comment_text, targets)
+
+        ran_sampler = torch.utils.data.RandomSampler(train_dataset)
+        len_sampler = LenMatchBatchSampler(ran_sampler, batch_size=config.TRAIN_BATCH_SIZE, drop_last=False)
+        train_data_loader = torch.utils.data.DataLoader(
+                train_dataset,
+                num_workers=config.TRAIN_WORKERS,
+                batch_sampler=len_sampler
+            )
+
+    else: 
+        # default training on GPU
+        train_dataset = dataset.BERTDatasetTrain(
+            comment_text=df_train.comment_text.values,
+            target=np.concatenate(
+                (df_train.toxic.values[:, None], 
+                df_train.weight.values[:, None]), axis=1)
+        )
+
+        train_data_loader = torch.utils.data.DataLoader(
+            train_dataset,
+            batch_size=config.TRAIN_BATCH_SIZE,
+            num_workers=config.TRAIN_WORKERS
+        )
+
+    ###################################################################
 
     valid_dataset = dataset.BERTDatasetTrain(
         comment_text=df_valid.comment_text.values,

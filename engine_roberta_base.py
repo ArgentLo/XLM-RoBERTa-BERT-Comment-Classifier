@@ -3,6 +3,7 @@ import torch.nn as nn
 from tqdm import tqdm
 
 from focal_loss import FocalLoss
+from batch_sampler import trim_tensors
 import config
 
 def loss_fn(outputs, targets, focal_loss=False):
@@ -16,12 +17,18 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
     model.train()
 
     for batch_idx, d in tqdm(enumerate(data_loader), total=len(data_loader)):
-        ids = d["ids"]
-        mask = d["mask"]
-        targets = d["targets"]
 
+        try: 
+            ids = d["ids"]
+            targets = d["targets"]
+        except:
+            tsrs = trim_tensors(d)
+            ids, targets = tuple(t.to(device) for t in tsrs)
+            # print("comment_text:", d[0])
+            # print("Toxic: ", d[1])
+
+        mask = (ids > 0).to(device, dtype=torch.long)
         ids = ids.to(device, dtype=torch.long)
-        mask = mask.to(device, dtype=torch.long)
         targets = targets.to(device, dtype=torch.float)
 
         outputs = model(
@@ -43,7 +50,6 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
             loss = loss_fn(outputs, targets, focal_loss=config.FOCAL_LOSS)
             loss.backward()
             optimizer.step()
-
             
         scheduler.step()
 
