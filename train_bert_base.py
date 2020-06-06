@@ -214,7 +214,8 @@ def run():
         # clear gradients (accumulated backprop in each batch -> train_fn)
         optimizer.zero_grad()
 
-        print(f">>> Current LR: {param_group['lr']}")
+        # print(f">>> scheduler.get_last_lr: {np.format_float_scientific(scheduler.get_last_lr()[0], unique=False, precision=2)}.")
+        print(f">>> Current LR: {np.format_float_scientific(optimizer.param_groups[0]['lr'], unique=False, precision=2)}.")
 
         # train + save
         engine.train_fn(train_data_loader, model, optimizer, device, scheduler)
