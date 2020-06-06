@@ -103,8 +103,8 @@ def run(model_path):
 
 if __name__ == "__main__":
 
-    for i in range(2, 6):
-        trained_model = f"LossWeight_600k_{i}.bin"
+    for i in range(1, 4):
+        trained_model = f"MaxLen300_{i}.bin"
         print(">>> evaluating Model: ", trained_model)
         model_path = "./checkpoints/" + trained_model
 

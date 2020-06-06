@@ -2,7 +2,7 @@ import transformers
 
 ################    Train Config    ################
 WARM_UP  = 0.00   # Warm up LR 
-NON_TOXIX_NUM = 1000000
+NON_TOXIX_NUM = 100000
 LR = 1e-5
 
 TEST_MODE = False
@@ -10,21 +10,21 @@ TRAIN_VAL_COMBINE = True
 TRAIN_WITH_2018   = True
 TRAIN_FLOAT_SET2  = False
 TOXIC_THRESHOLD   = 0.95  # threshold FP targets. (0.95 if TRAIN_FLOAT_SET2=False ; 0.40 if True)
-LOSS_WEIGHT       = True
+LOSS_WEIGHT       = False
 
 TRAIN_WITH_ALEX   = False
 FOCAL_LOSS        = False
 
 # Save Path
-SAVE_NAME = "./checkpoints/LossWeight_600k"
+SAVE_NAME = "./checkpoints/MaxLen300"
 
-MAX_LEN = 192
+MAX_LEN = 300
 ACCUMULATION_STEP = 0
 
 TRAIN_BATCH_SIZE = 200  # GPU10: 400
 VALID_BATCH_SIZE = 200 
-TEST_BATCH_SIZE  = 2000
-EPOCHS = 5
+TEST_BATCH_SIZE  = 1500
+EPOCHS = 4
 
 
 # TRAIN_BATCH_SIZE = 4  # Roberta-base
