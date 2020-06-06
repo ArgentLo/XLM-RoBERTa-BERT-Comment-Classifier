@@ -18,25 +18,20 @@ def train_fn(data_loader, model, optimizer, device, scheduler):
 
     for batch_idx, d in tqdm(enumerate(data_loader), total=len(data_loader)):
 
-
         try: 
-            ids = d["ids"]
-            # token_type_ids = d["token_type_ids"]
-            # mask = d["mask"]
-            targets = d["targets"]
+            ids = d["ids"].to(device, dtype=torch.long)
+            token_type_ids = d["token_type_ids"].to(device, dtype=torch.long)
+            mask = d["mask"].to(device, dtype=torch.long)
+            targets = d["targets"].to(device, dtype=torch.float)
         except:
             tsrs = trim_tensors(d)
-            ids, targets = tuple(t.to(device) for t in tsrs)
+            ids, targets = tuple(t for t in tsrs)
             # print("comment_text:", d[0])
             # print("Toxic: ", d[1])
-
-        # token_type_ids = token_type_ids.to(device, dtype=torch.long)
-        token_type_ids = torch.tensor([0] * ids.shape[1]).to(device, dtype=torch.long)
-        # mask = mask.to(device, dtype=torch.long)
-        mask = (ids > 0).to(device, dtype=torch.long)
-
-        ids = ids.to(device, dtype=torch.long)
-        targets = targets.to(device, dtype=torch.float)
+            token_type_ids = torch.tensor([0] * ids.shape[1]).to(device, dtype=torch.long)
+            mask = (ids > 0).to(device, dtype=torch.long)
+            ids = ids.to(device, dtype=torch.long)
+            targets = targets.to(device, dtype=torch.float)
 
         outputs = model(
             ids=ids,

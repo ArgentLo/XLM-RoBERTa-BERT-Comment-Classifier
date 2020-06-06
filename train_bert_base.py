@@ -55,7 +55,10 @@ def get_data_loader(train_set1, train_set2, df_valid, epoch, train_with_alex):
     print(f">>> (valid set) toxic label%: {100*(num1 / (num0 + num1)) :.2f}%")
     # loss weight
     if config.LOSS_WEIGHT:
-        loss_w = train_toxic_ratio / (num1 / (num0 + num1))
+        if int(config.LOSS_WEIGHT) != 1:
+            loss_w = config.LOSS_WEIGHT
+        else: 
+            loss_w = train_toxic_ratio / (num1 / (num0 + num1))
         df_train.loc[:, "weight"] = df_train.loc[:, "toxic"]
         df_train.loc[:, "weight"].replace(0, loss_w, inplace=True)  # replace non-toxic label
         print(f">>>  Loss Weight for non-toxic lable: {loss_w :.2f}.")
@@ -137,12 +140,13 @@ def run():
         train_set1 = pd.read_csv(config.TRAIN_DATA1, usecols=["comment_text", "toxic"]).fillna("none")
 
         if config.TRAIN_WITH_2018:
-            # train_de_pavel = pd.read_csv(config.TRAIN_DE_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
-            # train_fr_pavel = pd.read_csv(config.TRAIN_FR_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
+            # train_de_pavel = pd.read_csv(config.TRAIN_DE_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")  #
+            # train_fr_pavel = pd.read_csv(config.TRAIN_FR_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")  #
             train_es_pavel = pd.read_csv(config.TRAIN_ES_PAVEL, usecols=["comment_text", "toxic"]).fillna("none")
             train_zafar = pd.read_csv(config.TRAIN_ZAFAR, usecols=["comment_text", "toxic"]).fillna("none")
             train_set1 = pd.concat([
                 train_set1, train_es_pavel, train_zafar
+                # train_set1, train_es_pavel, train_zafar, train_de_pavel, train_fr_pavel
             ], axis=0).reset_index(drop=True)
 
         train_set2 = pd.read_csv(config.TRAIN_DATA2, usecols=["comment_text", "toxic"]).fillna("none")
