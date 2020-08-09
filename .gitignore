@@ -1,4 +1,3 @@
-	  
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -8,6 +7,7 @@ settings.json
 # training models
 checkpoints/
 node_submissions/
+.ipynb_checkpoints
 
 # C extensions
 *.so
